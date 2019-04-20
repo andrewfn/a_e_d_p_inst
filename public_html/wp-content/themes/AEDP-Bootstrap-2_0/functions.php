@@ -162,7 +162,7 @@ function wpbdp_custom_search_form() {
                       <input type="hidden" name="page_id" value="%d" />
                       <input type="hidden" name="dosrch" value="1" />',
                       wpbdp_get_page_id('main'));
-    $html .= '<input id="intextbox" maxlength="150" name="q" size="20" type="text" value="" />';
+    $html .= '<input id="intextbox" maxlength="150" name="kw" size="20" type="text" value="" />';
     $html .= sprintf('<input id="wpbdmsearchsubmit" class="submit wpbdp-button wpbdp-submit" type="submit" value="%s" />',
                      _x('Search Listings', 'templates', 'WPBDM'));
 /*  $html .= sprintf('<a href="%s" class="advanced-search-link">%s</a>',
