@@ -199,11 +199,15 @@ class WPBDP__Listing_Search {
         } elseif ( ! empty( $request['listingfields'] ) ) {
             // Regular search.
             $res[] = 'and';
-
+            $usa_state = false;
             foreach ( $request['listingfields'] as $field_id => $term ) {
                 if ( ! $term )
                     continue;
+                if (($field_id == '79') && ($term != '')) $usa_state = true; // a US/Canada state has been selected
+                if (($field_id == '95') && ($usa_state)) continue;           // so ignore any country entered because it will not match if missing in directory
 
+                if (($term == 'NYC') || ($term == 'New York City')) $term = 'New York'; // Tidy up New York alternatives
+                if ($term == 'United States') $term = 'USA';  // Only used if no state is specified, so may not be necessary
                 $res[] = array( $field_id, $term );
             }
         }
