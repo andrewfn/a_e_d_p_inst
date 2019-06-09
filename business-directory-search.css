@@ -1,0 +1,5 @@
+
+/* Make keywords search and view all listings invisible */
+#wpbdp-main-box {
+	display: none;
+}

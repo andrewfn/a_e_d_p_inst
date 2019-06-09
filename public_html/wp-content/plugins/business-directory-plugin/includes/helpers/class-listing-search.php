@@ -199,15 +199,30 @@ class WPBDP__Listing_Search {
         } elseif ( ! empty( $request['listingfields'] ) ) {
             // Regular search.
             $res[] = 'and';
-            $usa_state = false;
+            $no_country_needed = false;
             foreach ( $request['listingfields'] as $field_id => $term ) {
                 if ( ! $term )
                     continue;
-                if (($field_id == '79') && ($term != '')) $usa_state = true; // a US/Canada state has been selected
-                if (($field_id == '95') && ($usa_state)) continue;           // so ignore any country entered because it will not match if missing in directory
+                
+                if ($field_id == '79') { // 79 =  State
+                  if (($term == 'Other') || ($term == '-1') || (strpos($term, 'Outside') === 0)) $term = ''; // These selections mean the same as no selection
+                  if ($term != '') $no_country_needed = true; // a US/Canada state has been selected
+                }
+                if ($field_id == '80') { // 80 = City
+                  $city = strtolower($term);
+                  if (($city == 'nyc') || ($city == 'new york city') || ($city == 'new york')) { // sometimes this is all that is given
+                    $term = 'New York';
+                    $no_country_needed = true;
+                  }
+                  if ($city == 'san francisco') $no_country_needed = true;
+                }
+                if ($field_id == '95') { // 95 = Country
+                  if ($no_country_needed) continue;           // so ignore any country entered because it will not match if missing in directory
+                  $country = strtolower($term);
+                  if (($country == 'united states') || ($country == 'usa') || ($country == 'us')) continue; // Ignore USA until we can fix up the database
+                  // probably should check for UK or U.K
+                }
 
-                if (($term == 'NYC') || ($term == 'New York City')) $term = 'New York'; // Tidy up New York alternatives
-                if ($term == 'United States') $term = 'USA';  // Only used if no state is specified, so may not be necessary
                 $res[] = array( $field_id, $term );
             }
         }
